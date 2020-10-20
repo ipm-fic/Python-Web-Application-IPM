@@ -4,13 +4,13 @@ Repositorio de la práctica 1 de IPM, curso 2021.
 
 ## Miembros del grupo
 
-  * Nombre:
-  * Apellidos:
-  * Login UDC:
-  * Login Github:
+  * Nombre: Javier
+  * Apellidos: Escribano Salgado
+  * Login UDC: javier.escribano@udc.es
+  * Login Github: 
   
-  * Nombre:
-  * Apellidos:
-  * Login UDC:
-  * Login Github:
+  * Nombre: Martín
+  * Apellidos: Azpilcueta Rabuñal
+  * Login UDC: m.azpilcueta@udc.es
+  * Login Github: martinazpilcueta
 
