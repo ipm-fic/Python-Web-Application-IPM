@@ -3,8 +3,11 @@
 ## Vistas
 ### Vista Principal
 **Texto:** Intervalo ascendente/descendente.
+
 **Acción:** Seleccionar entre intervalo ascendente o descendente.
+
 **Texto:** Intervalos.
+
 **Cuadrícula:**
 - **Imagen:** Intervalo.
 - **Texto:** Nombre del intervalo.
@@ -12,10 +15,15 @@
 
 ### Vista del Intervalo
 **Acción:** Retroceder.
+
 **Texto:** Nombre de intervalo.
+
 **Texto:** Ejemplo de intervalo.
+
 **Texto:** Información de las canciones del intervalo (título, enlace, favoritos).
+
 **Texto:** Favoritos.
+
 **Acción:** Activar para filtrar por favoritos.
 ## Decisiones
 Hemos decidido simplificar al máximo la interfaz de usuario, enfocándonos en un diseño lo más minimalista posible. 
