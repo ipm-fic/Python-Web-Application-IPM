@@ -7,7 +7,7 @@ Repositorio de la práctica 1 de IPM, curso 2021.
   * Nombre: Javier
   * Apellidos: Escribano Salgado
   * Login UDC: javier.escribano@udc.es
-  * Login Github: 
+  * Login Github: javier-escribano 
   
   * Nombre: Martín
   * Apellidos: Azpilcueta Rabuñal
