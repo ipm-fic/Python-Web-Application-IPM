@@ -3,6 +3,7 @@
 import gi
 import json
 import random
+import webbrowser
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
@@ -83,6 +84,8 @@ class ResponseWindow(Gtk.Window):
         column_fav = Gtk.TreeViewColumn("Favoritos", renderer_fav, text=2)
         treeview.append_column(column_fav)
 
+        treeview.connect("row-activated", self.open_url)
+
         container_box.pack_start(treeview, False, False, 0)
 
         # Fav Switcher Section
@@ -133,6 +136,10 @@ class ResponseWindow(Gtk.Window):
         else:
             snd_note = (fst_note - distance) % 12
             return notes[fst_note] + " - " + notes[snd_note]
+
+    def open_url(self, view, row, column):
+        if self.liststore[row][1] != "":
+            webbrowser.open(self.liststore[row][1])
 
 
 class MainWindow(Gtk.Window):
