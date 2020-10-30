@@ -37,10 +37,10 @@ def create_switch():
     return switch
 
 
-class ResponseWindow(Gtk.Dialog):
+class ResponseWindow(Gtk.Window):
     def __init__(self, interval, on_off, distance):
-        # Dialog
-        Gtk.Dialog.__init__(self, title="Respuesta: " + interval + " " + on_off)
+        # Window
+        Gtk.Window.__init__(self, title="Respuesta: " + interval + " " + on_off)
         self.set_size_request(500, 300)
 
         # Container
@@ -103,8 +103,7 @@ class ResponseWindow(Gtk.Dialog):
 
         # Add
         self.fill_treeview(self.liststore, interval, on_off)
-        box = self.get_content_area()
-        box.add(container_box)
+        self.add(container_box)
 
     @staticmethod
     def fill_treeview(liststore, interval, on_off):
