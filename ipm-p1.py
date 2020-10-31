@@ -146,7 +146,7 @@ class MainWindow(Gtk.Window):
     def __init__(self):
         # Window
         Gtk.Window.__init__(self, title="Interfaz Musical")
-        self.set_size_request(400, 400)
+        self.set_size_request(600, 400)
 
         # Main Container
         container_box = create_vbox()
@@ -165,9 +165,12 @@ class MainWindow(Gtk.Window):
 
         # Button Section
         interval_label = Gtk.Label()
+        interval_label.set_margin_top(25)
         interval_label.set_markup("<b><span size='x-large'>Intervalos</span></b>")
         interval_label.set_halign(Gtk.Align.START)
         flowbox = Gtk.FlowBox()
+        flowbox.set_row_spacing(15)
+        flowbox.set_column_spacing(15)
         flowbox.set_margin_top(20)
         flowbox.set_max_children_per_line(4)
         self.create_buttons(flowbox, asc_switch)
