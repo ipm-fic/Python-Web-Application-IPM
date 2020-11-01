@@ -10,6 +10,7 @@ from gi.repository import Gtk
 from urllib import request
 
 url_songs = "http://localhost:5000/songs"
+url_intervals = "http://localhost:5000/intervals"
 notes = ["do", "do♯", "re", "re♯", "mi", "fa", "fa♯", "sol", "sol♯", "la", "la♯", "si"]
 
 
@@ -22,6 +23,18 @@ def get_songs(interval, asc_des):
 
     for i in range(len(listdata)):
         response_list.append(listdata[i])
+
+    return response_list
+
+
+def get_intervals():
+    response = request.urlopen(url_intervals)
+    data = response.read()
+    jsondata = json.loads(data)
+    response_list = []
+
+    for interval in jsondata["data"]:
+        response_list.append(interval)
 
     return response_list
 
@@ -74,14 +87,17 @@ class ResponseWindow(Gtk.Window):
 
         renderer_title = Gtk.CellRendererText()
         column_title = Gtk.TreeViewColumn("Título", renderer_title, text=0)
+        column_title.set_resizable(True)
         treeview.append_column(column_title)
 
         renderer_url = Gtk.CellRendererText()
         column_url = Gtk.TreeViewColumn("Url", renderer_url, text=1)
+        column_url.set_resizable(True)
         treeview.append_column(column_url)
 
         renderer_fav = Gtk.CellRendererText()
         column_fav = Gtk.TreeViewColumn("Favoritos", renderer_fav, text=2)
+        column_fav.set_resizable(True)
         treeview.append_column(column_fav)
 
         treeview.connect("row-activated", self.open_url)
@@ -194,7 +210,7 @@ class MainWindow(Gtk.Window):
         response.show_all()
 
     def create_buttons(self, flowbox, switch):
-        buttons = ["2m", "2M", "3m", "3M", "4j", "4aum", "5j", "6m", "6M", "7m", "7M", "8a"]
+        buttons = get_intervals()
 
         for button in buttons:
             added_item = Gtk.Button.new_with_label(button)
