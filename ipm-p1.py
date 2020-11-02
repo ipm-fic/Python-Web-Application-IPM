@@ -4,16 +4,32 @@ import gi
 import json
 import random
 import webbrowser
-import threading
-import time
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, GLib
-from urllib import request, error
+from gi.repository import Gtk
+from urllib import request
 
 url_songs = "http://localhost:5000/songs"
 url_intervals = "http://localhost:5000/intervals"
 notes = ["do", "do♯", "re", "re♯", "mi", "fa", "fa♯", "sol", "sol♯", "la", "la♯", "si"]
+
+
+def get_interval_distance(interval):
+    switcher = {
+        "2m": 1,
+        "2M": 2,
+        "3m": 3,
+        "3M": 4,
+        "4j": 5,
+        "4aum": 6,
+        "5j": 7,
+        "6m": 8,
+        "6M": 9,
+        "7m": 10,
+        "7M": 11,
+        "8a": 12
+    }
+    return switcher.get(interval, "Intervalo Inválido")
 
 
 def get_songs(interval, asc_des):
@@ -29,21 +45,16 @@ def get_songs(interval, asc_des):
     return response_list
 
 
-def get_intervals(main_window):
-    try:
-        response = request.urlopen(url_intervals)
-        data = response.read()
-        jsondata = json.loads(data)
-        response_list = []
+def get_intervals():
+    response = request.urlopen(url_intervals)
+    data = response.read()
+    jsondata = json.loads(data)
+    response_list = []
 
-        for interval in jsondata["data"]:
-            response_list.append(interval)
+    for interval in jsondata["data"]:
+        response_list.append(interval)
 
-        time.sleep(0.5)
-        GLib.idle_add(main_window.update_view, response_list, 1)
-    except error.URLError:
-        time.sleep(0.5)
-        GLib.idle_add(main_window.update_view, "Error", 0)
+    return response_list
 
 
 def create_vbox():
@@ -58,30 +69,11 @@ def create_switch():
     return switch
 
 
-class Controller:
-    def __init__(self):
-        self.main_window = MainWindow(self)
-        self.main_window.default_view()
-        self.interval_petition()
-
-    def execute(self):
-        Gtk.main()
-
-    def interval_petition(self):
-        thread = threading.Thread(target=get_intervals, args=(self.main_window,))
-        thread.daemon = True
-        thread.start()
-
-    def on_retry_clicked(self, widget):
-        self.main_window.spin.start()
-        self.main_window.error_btn.hide()
-        self.main_window.error_h1.hide()
-        self.main_window.error_sub_h1.hide()
-        self.interval_petition()
-
-
 class ResponseWindow(Gtk.Window):
-    def __init__(self, interval, on_off, distance):
+    def __init__(self, interval, on_off):
+        # Vars
+        self.interval = interval
+
         # Window
         Gtk.Window.__init__(self, title="Respuesta: " + interval + " " + on_off)
         self.set_size_request(500, 300)
@@ -97,7 +89,7 @@ class ResponseWindow(Gtk.Window):
                                   interval + " " + on_off + "</span>")
         interval_label.set_halign(Gtk.Align.START)
         example_label = Gtk.Label()
-        example = self.create_example(distance, on_off)
+        example = self.create_example(on_off)
         example_label.set_markup(
             "<b><span size='x-large'>Ejemplo: </span></b>" + "<span size='x-large'>" + example + "</span>")
         example_label.set_halign(Gtk.Align.START)
@@ -156,6 +148,7 @@ class ResponseWindow(Gtk.Window):
     @staticmethod
     def fill_treeview(liststore, interval, on_off):
         interval_list = get_songs(interval, on_off)
+
         for i in range(len(interval_list)):
             liststore.append([interval_list[i][0], interval_list[i][1], interval_list[i][2]])
 
@@ -172,9 +165,9 @@ class ResponseWindow(Gtk.Window):
             self.current_fav_filter = "NO"
         self.fav_filter.refilter()
 
-    @staticmethod
-    def create_example(distance, on_off):
+    def create_example(self, on_off):
         fst_note = notes.index(random.choice(notes))
+        distance = get_interval_distance(self.interval)
         if on_off == "asc":
             snd_note = (fst_note + distance) % 12
             return notes[fst_note] + " - " + notes[snd_note]
@@ -188,60 +181,43 @@ class ResponseWindow(Gtk.Window):
 
 
 class MainWindow(Gtk.Window):
-    def __init__(self, control):
+    def __init__(self):
         # Window
-        self.win = Gtk.Window(title="Interfaz Musical")
-        self.win.set_size_request(600, 400)
+        Gtk.Window.__init__(self, title="Interfaz Musical")
+        self.set_size_request(600, 400)
 
-        self.container_box = create_vbox()
-        self.container_box.set_valign(Gtk.Align.START)
-        self.container_box.set_border_width(30)
+        # Main Container
+        container_box = create_vbox()
+        container_box.set_valign(Gtk.Align.START)
+        container_box.set_border_width(30)
 
         # Switcher Section
-        self.asc_label = Gtk.Label()
-        self.asc_label.set_markup("<b><span size='x-large'>Intervalo Ascendente</span></b>")
-        self.asc_switch = create_switch()
-        self.asc_switch.set_halign(Gtk.Align.CENTER)
-        self.asc_switch.set_margin_top(20)
+        asc_label = Gtk.Label()
+        asc_label.set_markup("<b><span size='x-large'>Intervalo Ascendente</span></b>")
+        asc_switch = create_switch()
+        asc_switch.set_halign(Gtk.Align.CENTER)
+        asc_switch.set_margin_top(20)
 
-        self.container_box.pack_start(self.asc_label, True, True, 0)
-        self.container_box.pack_start(self.asc_switch, True, True, 0)
+        container_box.pack_start(asc_label, True, True, 0)
+        container_box.pack_start(asc_switch, True, True, 0)
 
         # Button Section
-        self.interval_label = Gtk.Label()
-        self.interval_label.set_margin_top(25)
-        self.interval_label.set_markup("<b><span size='x-large'>Intervalos</span></b>")
-        self.interval_label.set_halign(Gtk.Align.START)
-        self.flowbox = Gtk.FlowBox()
-        self.flowbox.set_row_spacing(15)
-        self.flowbox.set_column_spacing(15)
-        self.flowbox.set_margin_top(20)
-        self.flowbox.set_max_children_per_line(4)
+        interval_label = Gtk.Label()
+        interval_label.set_margin_top(25)
+        interval_label.set_markup("<b><span size='x-large'>Intervalos</span></b>")
+        interval_label.set_halign(Gtk.Align.START)
+        flowbox = Gtk.FlowBox()
+        flowbox.set_row_spacing(15)
+        flowbox.set_column_spacing(15)
+        flowbox.set_margin_top(20)
+        flowbox.set_max_children_per_line(4)
+        self.create_buttons(flowbox, asc_switch)
 
-        self.container_box.pack_start(self.interval_label, True, True, 0)
-        self.container_box.pack_start(self.flowbox, False, False, 0)
-
-        # Error
-        self.error_h1 = Gtk.Label()
-        self.error_h1.set_halign(Gtk.Align.CENTER)
-        self.error_h1.set_markup("<b><span size='xx-large'>Error</span></b>")
-        self.error_sub_h1 = Gtk.Label()
-        self.error_sub_h1.set_halign(Gtk.Align.CENTER)
-        self.error_sub_h1.set_markup("No se pudo conectar al servidor")
-        self.error_btn = Gtk.Button.new_with_label(label="Reintentar Conexion")
-        self.error_btn.set_margin_top(20)
-        self.error_btn.connect("clicked", control.on_retry_clicked)
-        self.spin = Gtk.Spinner()
-        self.spin.set_size_request(35, 35)
-        self.container_box.pack_start(self.error_h1, True, True, 0)
-        self.container_box.pack_start(self.error_sub_h1, True, True, 0)
-        self.container_box.pack_start(self.error_btn, True, True, 0)
-        self.container_box.pack_start(self.spin, True, True, 0)
+        container_box.pack_start(interval_label, True, True, 0)
+        container_box.pack_start(flowbox, False, False, 0)
 
         # Add
-        self.win.add(self.container_box)
-        self.win.connect("destroy", Gtk.main_quit)
-        self.win.show()
+        self.add(container_box)
 
     @staticmethod
     def switch_status(switch):
@@ -250,43 +226,22 @@ class MainWindow(Gtk.Window):
         else:
             return "des"
 
-    def on_button_clicked(self, widget, interval, switch, distance):
+    def on_button_clicked(self, widget, interval, switch):
         on_off = self.switch_status(switch)
-        response = ResponseWindow(interval, on_off, distance)
+        response = ResponseWindow(interval, on_off)
         response.show_all()
 
-    def create_buttons(self, flowbox, switch, interval_list):
+    def create_buttons(self, flowbox, switch):
+        buttons = get_intervals()
 
-        for button in interval_list:
+        for button in buttons:
             added_item = Gtk.Button.new_with_label(button)
             added_item.set_size_request(30, 70)
-            distance = interval_list.index(button) + 1
-            added_item.show()
-            added_item.connect("clicked", self.on_button_clicked, button, switch, distance)
+            added_item.connect("clicked", self.on_button_clicked, button, switch)
             flowbox.add(added_item)
 
-    def default_view(self):
-        self.container_box.show()
-        self.container_box.set_valign(Gtk.Align.CENTER)
-        self.spin.set_halign(Gtk.Align.CENTER)
-        self.spin.set_valign(Gtk.Align.CENTER)
-        self.spin.set_size_request(35, 35)
-        self.spin.show()
-        self.spin.start()
 
-    def update_view(self, interval_list, value):
-        self.spin.stop()
-        if value == 0:
-            self.error_btn.show()
-            self.error_h1.show()
-            self.error_sub_h1.show()
-        else:
-            self.asc_label.show()
-            self.asc_switch.show()
-            self.interval_label.show()
-            self.flowbox.show()
-            self.create_buttons(self.flowbox, self.asc_switch, interval_list)
-
-
-build = Controller()
-build.execute()
+win = MainWindow()
+win.connect("destroy", Gtk.main_quit)
+win.show_all()
+Gtk.main()
