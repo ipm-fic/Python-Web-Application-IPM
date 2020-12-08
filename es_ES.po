@@ -43,7 +43,7 @@ msgstr "Reintentar conexión"
 
 #: vista.py:200
 msgid "Respuesta: "
-msgstr ""
+msgstr "Respuesta: "
 
 #: vista.py:211
 msgid "Intervalo: "
