@@ -268,9 +268,7 @@ class ResponseWindow(Gtk.Window):
 
         self.w.add(self.container_box)
         self.w.show_all()
-
-    def connect_retry(self, handler):
-        self.error_button.connect("clicked", handler)
+        
 
     def fav_filter_func(self, model, iteri, data):
         if self.current_fav_filter == "NO":
