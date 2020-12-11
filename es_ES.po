@@ -1,0 +1,118 @@
+# Spanish translations for PACKAGE package.
+# Copyright (C) 2020 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Martin <martin@martin-virtualbox>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-27 20:21+0100\n"
+"PO-Revision-Date: 2020-11-27 20:40+0100\n"
+"Last-Translator: Martin <martin@martin-virtualbox>\n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: vista.py:21
+msgid "Interfaz Musical"
+msgstr "Interfaz Musical"
+
+#: vista.py:32
+msgid "Intervalo Ascendente"
+msgstr "Intervalo Ascendente"
+
+#: vista.py:43
+msgid "Intervalos"
+msgstr "Intervalos"
+
+#: vista.py:61
+msgid "Error"
+msgstr "Error"
+
+#: vista.py:63
+msgid "No se ha podido conectar con el servidor"
+msgstr "No se ha podido conectar con el servidor"
+
+#: vista.py:67
+msgid "Reintentar"
+msgstr "Reintentar conexión"
+
+#: vista.py:200
+msgid "Respuesta: "
+msgstr "Respuesta: "
+
+#: vista.py:211
+msgid "Intervalo: "
+msgstr "Intervalo: "
+
+#: vista.py:216
+msgid "Ejemplo: "
+msgstr "Ejemplo: "
+
+#: vista.py:233
+msgid "Titulo"
+msgstr "Título"
+
+#: vista.py:243
+msgid "Favoritos"
+msgstr "Favoritos"
+
+#: vista.py:258
+msgid "Solo Favoritos"
+msgstr "Sólo favoritos"
+
+#: modelo.py:13
+msgid "do"
+msgstr "do"
+
+#: modelo.py:13
+msgid "do♯"
+msgstr "do♯"
+
+#: modelo.py:13
+msgid "re"
+msgstr "re"
+
+#: modelo.py:13
+msgid "re♯"
+msgstr "re♯"
+
+#: modelo.py:13
+msgid "mi"
+msgstr "mi"
+
+#: modelo.py:13
+msgid "fa"
+msgstr "fa"
+
+#: modelo.py:13
+msgid "fa♯"
+msgstr "fa♯"
+
+#: modelo.py:13
+msgid "sol"
+msgstr "sol"
+
+#: modelo.py:13
+msgid "sol♯"
+msgstr "sol♯"
+
+#: modelo.py:13
+msgid "la"
+msgstr "la"
+
+#: modelo.py:13
+msgid "la♯"
+msgstr "la♯"
+
+#: modelo.py:14
+msgid "si"
+msgstr "si"
+
+#: modelo.py:93
+msgid "Intervalo Invalido"
+msgstr "Intervalo Inválido"

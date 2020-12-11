@@ -1,11 +1,17 @@
+# -*- coding: utf-8 -*-
+
 import json
 import random
+import gettext
 
 from urllib import request, error
 
+_ = gettext.gettext
+
 url_songs = "http://localhost:5000/songs"
 url_intervals = "http://localhost:5000/intervals"
-notes = ["do", "do♯", "re", "re♯", "mi", "fa", "fa♯", "sol", "sol♯", "la", "la♯", "si"]
+notes = [_("do"), _("do♯"), _("re"), _("re♯"), _("mi"), _("fa"), _("fa♯"), _("sol"), _("sol♯"), _("la"), _("la♯"),
+         _("si")]
 
 
 class Model:
@@ -84,14 +90,15 @@ class Model:
             "7M": 11,
             "8a": 12
         }
-        return switcher.get(interval, "Intervalo Inválido")
+        invalid_interval = _("Intervalo Invalido")
+        return switcher.get(interval, invalid_interval)
 
     def create_example(self, interval, on_off):
         fst_note = notes.index(random.choice(notes))
         distance = self.get_interval_distance(interval)
         if on_off == "asc":
             snd_note = (fst_note + distance) % 12
-            return notes[fst_note] + " - " + notes[snd_note]
+            return _(notes[fst_note]) + " - " + _(notes[snd_note])
         else:
             snd_note = (fst_note - distance) % 12
-            return notes[fst_note] + " - " + notes[snd_note]
+            return _(notes[fst_note]) + " - " + _(notes[snd_note])

@@ -1,15 +1,24 @@
+# -*- coding: utf-8 -*-
+
 import gi
 import webbrowser
+import locale
+import gettext
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GLib
+
+_ = gettext.gettext
+
+
+# N_ = gettext.ngettext
 
 
 class MainWindow(Gtk.Window):
     def __init__(self):
 
         # Window
-        self.w = Gtk.Window(title="Interfaz Musical")
+        self.w = Gtk.Window(title=_("Interfaz Musical"))
         self.w.set_size_request(600, 400)
         self.w.connect("destroy", Gtk.main_quit)
 
@@ -20,7 +29,7 @@ class MainWindow(Gtk.Window):
 
         # Switcher Section
         self.asc_label = Gtk.Label()
-        self.asc_label.set_markup("<b><span size='x-large'>Intervalo Ascendente</span></b>")
+        self.asc_label.set_markup("<b><span size='x-large'>" + _("Intervalo Ascendente") + "</span></b>")
         self.asc_switch = Gtk.Switch()
         self.asc_switch.set_halign(Gtk.Align.CENTER)
         self.asc_switch.set_margin_top(20)
@@ -31,7 +40,7 @@ class MainWindow(Gtk.Window):
         # Button Section
         self.interval_label = Gtk.Label()
         self.interval_label.set_margin_top(25)
-        self.interval_label.set_markup("<b><span size='x-large'>Intervalos</span></b>")
+        self.interval_label.set_markup("<b><span size='x-large'>" + _("Intervalos") + "</span></b>")
         self.interval_label.set_halign(Gtk.Align.START)
         self.flowbox = Gtk.FlowBox()
         self.flowbox.set_row_spacing(15)
@@ -49,13 +58,13 @@ class MainWindow(Gtk.Window):
         self.spin.start()
 
         self.error_h1 = Gtk.Label()
-        self.error_h1.set_markup("<b><span size='xx-large'>Error</span></b>")
+        self.error_h1.set_markup("<b><span size='xx-large'>" + _("Error") + "</span></b>")
         self.error_p = Gtk.Label()
-        self.error_p.set_markup("No se ha podido conectar con el servidor")
+        self.error_p.set_markup(_("No se ha podido conectar con el servidor"))
         self.hbox_button = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         self.hbox_button.set_halign(Gtk.Align.CENTER)
         self.hbox_button.set_valign(Gtk.Align.CENTER)
-        self.error_button = Gtk.Button.new_with_label(label="Reintentar")
+        self.error_button = Gtk.Button.new_with_label(label=_("Reintentar"))
         self.error_button.set_margin_top(20)
         self.error_button.set_size_request(30, 20)
         self.hbox_button.pack_start(self.error_button, False, False, 0)
@@ -121,7 +130,7 @@ class MainWindow(Gtk.Window):
         self.asc_switch.hide()
         self.flowbox.hide()
         self.interval_label.hide()
-        self.songs_spinner_stop()
+        self.stop_songs_spinner_caller()
 
     def hide_error(self):
         self.error_h1.hide()
@@ -188,7 +197,7 @@ class ResponseWindow(Gtk.Window):
         self.content_list = content_list
 
         # Window
-        self.w = Gtk.Window(title="Respuesta: " + self.interval + " " + self.on_off)
+        self.w = Gtk.Window(title=_("Respuesta: ") + _(self.interval) + " " + self.on_off)
         self.w.set_size_request(500, 300)
 
         # Container
@@ -198,12 +207,14 @@ class ResponseWindow(Gtk.Window):
 
         # Header
         self.interval_label = Gtk.Label()
-        self.interval_label.set_markup("<b><span size='x-large'>Intervalo: </span></b>" + "<span size='x-large'>" +
-                                       self.interval + " " + self.on_off + "</span>")
+        self.interval_label.set_markup(
+            "<b><span size='x-large'>" + _("Intervalo: ") + "</span></b><span size='x-large'>" +
+            _(self.interval) + " " + self.on_off + "</span>")
         self.interval_label.set_halign(Gtk.Align.START)
         self.example_label = Gtk.Label()
         self.example_label.set_markup(
-            "<b><span size='x-large'>Ejemplo: </span></b>" + "<span size='x-large'>" + self.example + "</span>")
+            "<b><span size='x-large'>" + _("Ejemplo: ") + "</span></b><span size='x-large'>" + _(
+                self.example) + "</span>")
         self.example_label.set_halign(Gtk.Align.START)
         self.example_label.set_margin_top(10)
 
@@ -219,7 +230,7 @@ class ResponseWindow(Gtk.Window):
         self.current_fav_filter = "NO"
 
         self.renderer_title = Gtk.CellRendererText()
-        self.column_title = Gtk.TreeViewColumn("Título", self.renderer_title, text=0)
+        self.column_title = Gtk.TreeViewColumn(_("Titulo"), self.renderer_title, text=0)
         self.column_title.set_resizable(True)
         self.treeview.append_column(self.column_title)
 
@@ -229,7 +240,7 @@ class ResponseWindow(Gtk.Window):
         self.treeview.append_column(self.column_url)
 
         self.renderer_fav = Gtk.CellRendererText()
-        self.column_fav = Gtk.TreeViewColumn("Favoritos", self.renderer_fav, text=2)
+        self.column_fav = Gtk.TreeViewColumn(_("Favoritos"), self.renderer_fav, text=2)
         self.column_fav.set_resizable(True)
         self.treeview.append_column(self.column_fav)
 
@@ -244,7 +255,7 @@ class ResponseWindow(Gtk.Window):
         self.fav_box.set_halign(Gtk.Align.CENTER)
         self.fav_box.set_margin_top(30)
         self.fav_label = Gtk.Label()
-        self.fav_label.set_markup("<b><span size='x-large'>Sólo Favoritos</span></b>")
+        self.fav_label.set_markup("<b><span size='x-large'>" + _("Solo Favoritos") + "</span></b>")
         self.fav_switch = Gtk.Switch()
         self.fav_switch.set_size_request(45, 25)
         self.fav_switch.connect("notify::active", self.on_switch_used)
@@ -257,7 +268,7 @@ class ResponseWindow(Gtk.Window):
 
         self.w.add(self.container_box)
         self.w.show_all()
-
+        
 
     def fav_filter_func(self, model, iteri, data):
         if self.current_fav_filter == "NO":
